@@ -15,7 +15,7 @@ jobs:
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.9.0
         with:
-            ssh-private-key: ${{ secrets.EC2_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.EC2_PRIVATE_KEY }}
 
       - name: Deploy Docker containers on EC2
         run: |
@@ -24,7 +24,7 @@ jobs:
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-api:latest
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-ui:latest
 
-            # Create a Docker network
+            # Create a Docker network (if not already created)
             sudo docker network create my3tier || true
 
             # Run Postgres
@@ -46,6 +46,6 @@ jobs:
             # Run the UI
             sudo docker rm -f my3tier-ui || true
             sudo docker run -d --network my3tier --name my3tier-ui \
-              -p 80:80 -e API_URL="http://${{ secrets.EC2_HOST }}:5000/" \
+              -p 80:80 -e API_URL=\"http://${{ secrets.EC2_HOST }}:5000/\" \
               ${{ secrets.DOCKERHUB_USERNAME }}/basic3tier-ui:latest
           "
